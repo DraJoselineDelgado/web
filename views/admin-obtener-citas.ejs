@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Agendar Cita</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap y FullCalendar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f4f6f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        #calendar {
+            max-width: 850px;
+            margin: 30px auto 60px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px 25px;
+            font-size: 16px;
+            color: #333;
+        }
+        /* Header del calendario */
+        
+        .fc-toolbar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        /* Botones estilo moderno */
+        
+        .fc-button {
+            background-color: #2e86de;
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 6px;
+            padding: 8px 16px;
+            box-shadow: 0 3px 8px rgba(46, 134, 222, 0.5);
+            transition: background-color 0.3s ease;
+        }
+        
+        .fc-button:hover,
+        .fc-button:focus {
+            background-color: #1b4f72;
+            box-shadow: 0 4px 12px rgba(27, 79, 114, 0.7);
+            outline: none;
+        }
+        /* Botón Hoy destacado */
+        
+        .fc-today-button {
+            background-color: #27ae60;
+            box-shadow: 0 3px 8px rgba(39, 174, 96, 0.6);
+        }
+        
+        .fc-today-button:hover {
+            background-color: #145a32;
+            box-shadow: 0 4px 12px rgba(20, 90, 50, 0.8);
+        }
+        /* Fecha actual */
+        
+        .fc-day.fc-today {
+            background-color: #d1f2eb !important;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #117a65 !important;
+        }
+        /* Días de la semana */
+        
+        .fc-day-header {
+            color: #34495e;
+            font-weight: 700;
+            font-size: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        /* Celdas de días */
+        
+        .fc-day {
+            border: 1px solid #ecf0f1;
+            padding: 8px 4px;
+            height: 90px;
+            vertical-align: top;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .fc-day:hover {
+            background-color: #e8f6f3;
+        }
+        /* Eventos */
+        
+        .fc-event {
+            background-color: #2980b9 !important;
+            border: none !important;
+            padding: 5px 8px !important;
+            font-size: 13px !important;
+            border-radius: 6px !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(41, 128, 185, 0.6);
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .fc-event:hover {
+            background-color: #1b4f72 !important;
+            box-shadow: 0 3px 12px rgba(27, 79, 114, 0.8);
+        }
+    </style>
+</head>
+
+<%- include('adminHOMEheader') %>
+
+
+    <body>
+        <div class="container mt-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="text-center flex-grow-1">CALENDARIO MENSUAL</h1>
+                <a href="/admin-home" class="btn btn-primary ms-3">
+                    <i class="bi bi-arrow-left-circle"></i> Volver
+                </a>
+            </div>
+            <h2 class="text-center mb-4">Verificar citas agendadas de los pacientes</h2>
+
+            <div class="text-center mb-4">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregarCita">
+                Agregar Nueva Cita
+            </button>
+            </div>
+
+            <div id="calendar"></div>
+        </div>
+        <!-- Script para inicializar calendario -->
+        <script>
+            $(document).ready(function() {
+                $('#calendar').fullCalendar({
+                    lang: 'es',
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    buttonText: {
+                        today: 'Hoy'
+                    },
+                    events: {
+                        url: '/admin-obtener-citas-json',
+                        type: 'GET',
+                        error: function() {
+                            alert('Error al obtener las citas');
+                        }
+                    },
+                    dayClick: function(date) {
+                        const fecha = date.format(); // formato ISO yyyy-mm-dd
+                        window.location.href = `/admin-citas-dia/${fecha}`;
+                    }
+                });
+            });
+        </script>
+
+        <!-- Modal para agregar nueva cita -->
+        <div class="modal fade" id="modalAgregarCita" tabindex="-1" aria-labelledby="modalAgregarCitaLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form class="modal-content" method="POST" action="/admin/citas/agregar">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgregarCitaLabel">Agregar Nueva Cita</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3 input-group">
+                            <label for="cedula" class="form-label">Cédula</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="cedula" id="inputCedula" required />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" name="nombre" id="inputNombre" readonly required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" name="fecha" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora" class="form-label">Hora</label>
+                            <input type="time" class="form-control" name="hora" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="especialidad" class="form-label">Especialidad</label>
+                            <select class="form-select" id="especialidad" name="especialidad" required>
+                            <option value="">Seleccione el servicio</option>
+                            <option value="Odontología General">Odontología General</option>
+                            <option value="Ortodoncia">Ortodoncia</option>
+                            <option value="Cirugía de tercer molares">Cirugía de tercer molares</option>
+                            <option value="Restauración Estética">Restauración Estética</option>
+                            <option value="Odontopediatria">Odontopediatría</option>
+                            <option value="Exodoncia">Exodoncia</option>
+                            <option value="Endodoncia">Endodoncia</option>
+                            <option value="Profilaxis">Profilaxis</option>
+                            <option value="Aclaramiento Dental">Aclaramiento Dental</option>
+                            <option value="Prótesis fijas y removibles">Prótesis fijas y removibles</option>
+                        </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario_id" class="form-label">ID del Usuario</label>
+                            <input type="number" class="form-control" name="usuario_id" id="inputUsuarioId" readonly required />
+                        </div>
+                        <div id="error-message" class="alert alert-danger d-none" role="alert"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cita</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            const modalForm = document.querySelector('#modalAgregarCita form');
+            const errorMessageDiv = document.querySelector('#error-message');
+
+            modalForm.addEventListener('submit', async(event) => {
+                event.preventDefault();
+
+                // Crear un objeto a partir de los datos del formulario
+                const formData = new FormData(event.target);
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
+                });
+
+                try {
+                    const response = await fetch('/admin/citas/agregar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data) // Convertir a JSON
+                    });
+
+                    if (response.status === 400) {
+                        const {
+                            error
+                        } = await response.json();
+                        errorMessageDiv.textContent = error;
+                        errorMessageDiv.classList.remove('d-none');
+                    } else {
+                        window.location.href = '/admin-citas-agendadas?success=Cita%20agendada%20correctamente.';
+                    }
+                } catch (error) {
+                    console.error('Error al agregar cita:', error);
+                    errorMessageDiv.textContent = 'Hubo un error al intentar agendar la cita.';
+                    errorMessageDiv.classList.remove('d-none');
+                }
+            });
+        </script>
+
+        <!-- JS Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Script para autocompletar nombre y usuario_id -->
+        <script>
+            document.getElementById('inputCedula').addEventListener('blur', async function() {
+                const cedula = this.value.trim();
+                if (!cedula) return;
+
+                try {
+                    const response = await fetch(`/buscar-usuario?cedula=${cedula}`);
+                    if (!response.ok) throw new Error('Paciente no encontrado');
+                    const data = await response.json();
+
+                    document.getElementById('inputNombre').value = data.nombre;
+                    document.getElementById('inputUsuarioId').value = data.usuario_id;
+                } catch (err) {
+                    alert('Usuario no encontrado');
+                    document.getElementById('inputNombre').value = '';
+                    document.getElementById('inputUsuarioId').value = '';
+                }
+            });
+        </script>
+        <!-- Bootstrap Bundle -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    </body>
+
+</html>

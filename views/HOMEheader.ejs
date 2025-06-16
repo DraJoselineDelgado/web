@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dra. Josseline Delgado</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #d6d1d1;
+            min-width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            background-color: #f2f2f2;
+        }
+        
+        .dropdown-content a.unread {
+            background-color: #d3d3d3;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #ebeaea;
+        }
+        
+        .dropdown:hover .dropdown-content.menu {
+            display: block;
+        }
+        
+        .navbar-brand {
+            font-family: Arial, sans-serif;
+        }
+        
+        .navbar-brand span:first-child {
+            font-weight: bold;
+            color: #f0f8ff;
+            font-size: 20px;
+        }
+        
+        .navbar-brand span:last-child {
+            font-weight: bold;
+            color: #dbeeff;
+            font-size: 16px;
+        }
+        
+        .nav-link {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e6f0ff;
+        }
+        
+        .nav-link:hover,
+        .nav-link:focus {
+            color: #c0d8ff;
+            text-decoration: none;
+        }
+        
+        .navbar-nav {
+            margin-left: auto;
+        }
+        
+        .user-icon,
+        .bell-icon {
+            color: #f0f8ff;
+            font-size: 26px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .notification-dropdown {
+            position: relative;
+        }
+        
+        .notification-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 250px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            margin-top: 10px;
+        }
+        
+        .notification-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .notification-item.unread {
+            background-color: #d3d3d3;
+        }
+        
+        .notification-item.read {
+            background-color: #ffffff;
+        }
+        
+        .badge-counter {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            padding: 2px 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #3d98dd;">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="/PaPrincipal">
+                    <img src="/images/logo.png" alt="Logo" class="mr-4" style="max-height: 80px;" />
+                    <div>
+                        <span>Dra. Joseline Delgado</span>
+                        <br />
+                        <span>Odontología Especializada</span>
+                    </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/PaPrincipal">Inicio</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button">Contacto</a>
+                            <div class="dropdown-content menu">
+                                <a href="https://wa.me/593993942467" target="_blank">WhatsApp</a>
+                                <a href="https://www.facebook.com/tu_pagina" target="_blank">Facebook</a>
+                                <a href="https://www.instagram.com/tu_perfil" target="_blank">Instagram</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button">Especialidades</a>
+                            <div class="dropdown-content menu">
+                                <a href="/Cirugiaa">Cirugía de Tercer Molar</a>
+                                <a href="/Esteticaa">Odontología General</a>
+                                <a href="/Ortodonciaa">Ortodoncia</a>
+                                <a href="/OtrasEspee">Otras Especialidades</a>
+                            </div>
+                        </li>
+
+                        <!-- Icono de usuario -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button">
+                                <i class="fas fa-user-circle user-icon"></i>
+                            </a>
+                            <div class="dropdown-content menu">
+                                <a href="/perfil">Mi Perfil</a>
+                                <a href="/EditPerfil">Completar Datos</a>
+                                <a href="/agendar-cita">Agendar Cita</a>
+                                <a href="/obtener-citas">Calendario</a>
+                                <a href="/citas-agendadas">Citas Agendadas</a>
+                                <a href="/login">Cerrar Sesión</a>
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <script>
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

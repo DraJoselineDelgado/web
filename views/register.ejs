@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <title>Crear cuenta - Dra. Josseline Delgado</title>
+    <style>
+        body {
+            background-image: url('/images/fondo_suave.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Montserrat', sans-serif;
+            transition: filter 0.5s ease-in-out;
+            position: relative;
+        }
+        /* Para oscurecer o suavizar el fondo y mejorar la legibilidad */
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(245, 245, 245, 0.7);
+            /* color blanco semi-transparente */
+            z-index: -1;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: #cecbcb;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            font-weight: bold;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004d99;
+        }
+        
+        .links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .links p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .links a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .links a:hover {
+            color: #0056b3;
+        }
+        
+        .alert {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('nav') %>
+
+        <div class="login-container">
+            <h2>Crear una cuenta</h2>
+            <form id="registerForm">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre Completo</label>
+                    <input type="text" class="form-control" id="nombre" required placeholder="Ingresa tu nombre">
+                </div>
+                <div class="mb-3">
+                    <label for="correo" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correo" required placeholder="Ingresa un correo electrónico">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" required placeholder="Ingresa una contraseña">
+                </div>
+                <div id="message" class="alert" style="display: none;"></div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Crear cuenta</button>
+                </div>
+            </form>
+
+            <div class="links">
+                <a href="/login">Volver</a>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            const registerForm = document.getElementById('registerForm');
+            const messageDiv = document.getElementById('message');
+            const nombreInput = document.getElementById('nombre');
+            const correoInput = document.getElementById('correo');
+            const passwordInput = document.getElementById('password');
+
+            registerForm.addEventListener('submit', async(event) => {
+                event.preventDefault();
+
+                const nombre = nombreInput.value.trim();
+                const correo = correoInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                // Validación del correo electrónico
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailPattern.test(correo)) {
+                    messageDiv.classList.remove('alert-success');
+                    messageDiv.classList.add('alert-danger');
+                    messageDiv.textContent = 'Por favor, ingresa un correo electrónico válido.';
+                    messageDiv.style.display = 'block';
+                    return;
+                }
+
+                // Validación de la contraseña (mínimo 6 caracteres)
+                if (password.length < 6) {
+                    messageDiv.classList.remove('alert-success');
+                    messageDiv.classList.add('alert-danger');
+                    messageDiv.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    messageDiv.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            nombre,
+                            correo,
+                            password
+                        })
+                    });
+
+                    if (response.ok) {
+                        messageDiv.classList.remove('alert-danger');
+                        messageDiv.classList.add('alert-success');
+                        messageDiv.textContent = 'Cuenta creada con éxito.';
+                        messageDiv.style.display = 'block';
+                        nombreInput.value = '';
+                        correoInput.value = '';
+                        passwordInput.value = '';
+                        // Agregar animación de desenfoque al cambiar de pantalla
+                        document.body.classList.add('blurred');
+                        setTimeout(() => {
+                            window.location.href = '/login'; // Redirigir a la página de inicio de sesión
+                        }, 1000);
+                    } else {
+                        const error = await response.json();
+                        messageDiv.classList.remove('alert-success');
+                        messageDiv.classList.add('alert-danger');
+                        messageDiv.textContent = error.error;
+                        messageDiv.style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    messageDiv.classList.remove('alert-success');
+                    messageDiv.classList.add('alert-danger');
+                    messageDiv.textContent = 'Ocurrió un error al registrar el usuario.';
+                    messageDiv.style.display = 'block';
+                }
+            });
+
+            // Agregar clase 'blurred' al body para la animación de desenfoque
+            document.body.classList.add('blurred');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.classList.remove('blurred');
+            });
+        </script>
+</body>
+
+</html>

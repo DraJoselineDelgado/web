@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editar Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .fadeIn {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('HOMEheader') %>
+
+        <div class="container my-5 fadeIn">
+            <h1 class="mb-4">ACTUALICE SUS DATOS</h1>
+
+            <% if (message) { %>
+                <div class="alert alert-<%= message.type %> d-flex align-items-center" role="alert">
+                    <% if (message.type === 'success') { %>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="green" class="bi bi-check-circle-fill me-2" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.07 0l4-4a.75.75 0 1 0-1.06-1.06L7.5 9.44 6.03 7.97a.75.75 0 1 0-1.06 1.06l2 2z" />
+                    </svg>
+                        <% } %>
+                            <div>
+                                <%= message.text %>
+                            </div>
+                </div>
+
+                <% if (message.type === 'success') { %>
+                    <script>
+                        setTimeout(() => {
+                            window.location.href = "/obtener-citas";
+                        }, 1000);
+                    </script>
+                    <% } %>
+                        <% } %>
+
+                            <form action="/EditPerfil" method="POST" enctype="multipart/form-data">
+
+                                <!-- Campo para subir foto de perfil -->
+                                <label for="foto_perfil" class="form-label mt-3">Foto de Perfil</label>
+                                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" class="form-control form-control-sm mb-4" />
+
+                                <!-- Datos personales y básicos -->
+                                <div class="row g-3 mb-3">
+                                    <!-- Tipo de Identificación -->
+                                    <div class="col-md-6">
+                                        <label for="tipo_id" class="form-label">Tipo de Identificación</label>
+                                        <select class="form-select form-select-sm" id="tipo_id" name="tipo_id" required>
+                        <option value="">Seleccione</option>
+                        <option value="nacional" <%= user.tipo_id === 'nacional' ? 'selected' : '' %>>Cédula Nacional</option>
+                        <option value="extranjero" <%= user.tipo_id === 'extranjero' ? 'selected' : '' %>>Pasaporte Extranjero</option>
+                    </select>
+                                    </div>
+
+                                    <!-- Número de Identificación -->
+                                    <div class="col-md-6">
+                                        <label for="cedula" class="form-label" id="label_cedula">Cédula</label>
+                                        <input type="text" class="form-control form-control-sm" id="cedula" name="cedula" value="<%= user.cedula || user.pasaporte || '' %>" required pattern="[0-9]{10}" title="Debe ser un número de cédula nacional válido de 10 dígitos" placeholder="Ingrese su cédula nacional (10 dígitos)"
+                                        />
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="sexo" class="form-label">Sexo</label>
+                                        <select class="form-select form-select-sm" id="sexo" name="sexo" required>
+                        <option value="">Seleccione</option>
+                        <option value="M" <%= user.sexo === 'M' ? 'selected' : '' %>>Masculino</option>
+                        <option value="F" <%= user.sexo === 'F' ? 'selected' : '' %>>Femenino</option>
+                    </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="edad" class="form-label">Edad</label>
+                                        <input type="number" class="form-control form-control-sm" id="edad" name="edad" value="<%= user.edad || '' %>" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="celular" class="form-label">Número de Celular</label>
+                                        <input type="tel" class="form-control form-control-sm" id="celular" name="celular" value="<%= user.celular || '' %>" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="ciudad" class="form-label">Ciudad</label>
+                                        <input type="text" class="form-control form-control-sm" id="ciudad" name="ciudad" value="<%= user.ciudad || '' %>" required>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="barrio" class="form-label">Barrio</label>
+                                        <input type="text" class="form-control form-control-sm" id="barrio" name="barrio" value="<%= user.barrio || '' %>" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="ocupacion" class="form-label">Ocupación</label>
+                                        <input type="text" class="form-control form-control-sm" id="ocupacion" name="ocupacion" value="<%= user.ocupacion || '' %>" required>
+                                    </div>
+                                </div>
+
+                                <!-- Información Médica -->
+                                <h4 class="mt-4 mb-3">Información Médica</h4>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label for="grupo_sanguineo" class="form-label">Grupo Sanguíneo</label>
+                                        <select class="form-select form-select-sm" id="grupo_sanguineo" name="grupo_sanguineo" required>
+                        <option value="">Seleccione</option>
+                        <option value="O+" <%= user.grupo_sanguineo === 'O+' ? 'selected' : '' %>>O+</option>
+                        <option value="O-" <%= user.grupo_sanguineo === 'O-' ? 'selected' : '' %>>O-</option>
+                        <option value="A+" <%= user.grupo_sanguineo === 'A+' ? 'selected' : '' %>>A+</option>
+                        <option value="A-" <%= user.grupo_sanguineo === 'A-' ? 'selected' : '' %>>A-</option>
+                        <option value="B+" <%= user.grupo_sanguineo === 'B+' ? 'selected' : '' %>>B+</option>
+                        <option value="B-" <%= user.grupo_sanguineo === 'B-' ? 'selected' : '' %>>B-</option>
+                        <option value="AB+" <%= user.grupo_sanguineo === 'AB+' ? 'selected' : '' %>>AB+</option>
+                        <option value="AB-" <%= user.grupo_sanguineo === 'AB-' ? 'selected' : '' %>>AB-</option>
+                    </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="alergias" class="form-label">Alergia a medicamentos</label>
+                                        <select class="form-select form-select-sm" id="alergias" name="alergias" onchange="toggleOtros('alergias')">
+                        <option value="">Seleccione un medicamento</option>
+                        <option value="Paracetamol" <%= user.alergias === 'Paracetamol' ? 'selected' : '' %>>Paracetamol</option>
+                        <option value="Analgan" <%= user.alergias === 'Analgan' ? 'selected' : '' %>>Analgan</option>
+                        <option value="Ibuprofeno" <%= user.alergias === 'Ibuprofeno' ? 'selected' : '' %>>Ibuprofeno</option>
+                        <option value="Amoxicilina" <%= user.alergias === 'Amoxicilina' ? 'selected' : '' %>>Amoxicilina</option>
+                        <option value="Penicilina" <%= user.alergias === 'Penicilina' ? 'selected' : '' %>>Penicilina</option>
+                        <option value="Aspirina" <%= user.alergias === 'Aspirina' ? 'selected' : '' %>>Aspirina</option>
+                        <option value="Ninguno" <%= user.alergias === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.alergias && !['Paracetamol', 'Analgan', 'Ibuprofeno', 'Amoxicilina', 'Penicilina', 'Aspirina', 'Ninguno'].includes(user.alergias) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" id="alergias_otros" name="alergias_otros" class="form-control form-control-sm mt-1" placeholder="Especifique otro medicamento" value="<%= ['Paracetamol', 'Analgan', 'Ibuprofeno', 'Amoxicilina', 'Penicilina', 'Aspirina', 'Ninguno'].includes(user.alergias) ? '' : (user.alergias || '') %>"
+                                            style="display:none;">
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label for="antecedentes_personales" class="form-label">Antecedente Personal</label>
+                                        <select class="form-select form-select-sm" id="antecedentes_personales" name="antecedentes_personales" onchange="toggleOtros('antecedentes_personales')">
+                        <option value="">Seleccione uno</option>
+                        <option value="Diabetes" <%= user.antecedentes_personales === 'Diabetes' ? 'selected' : '' %>>Diabetes</option>
+                        <option value="Hipertensión" <%= user.antecedentes_personales === 'Hipertensión' ? 'selected' : '' %>>Hipertensión</option>
+                        <option value="Asma" <%= user.antecedentes_personales === 'Asma' ? 'selected' : '' %>>Asma</option>
+                        <option value="Ninguno" <%= user.antecedentes_personales === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.antecedentes_personales && !['Diabetes', 'Hipertensión', 'Asma', 'Ninguno'].includes(user.antecedentes_personales) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="antecedentes_personales_otros" name="antecedentes_personales_otros" placeholder="Especifique otro antecedente personal" value="<%= user.antecedentes_personales && !['Diabetes', 'Hipertensión', 'Asma', 'Ninguno'].includes(user.antecedentes_personales) ? user.antecedentes_personales : '' %>"
+                                            style="display:none;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="antecedentes_familiares" class="form-label">Antecedente Familiar</label>
+                                        <select class="form-select form-select-sm" id="antecedentes_familiares" name="antecedentes_familiares" onchange="toggleOtros('antecedentes_familiares')">
+                        <option value="">Seleccione uno</option>
+                        <option value="Cáncer" <%= user.antecedentes_familiares === 'Cáncer' ? 'selected' : '' %>>Cáncer</option>
+                        <option value="Cardiopatía" <%= user.antecedentes_familiares === 'Cardiopatía' ? 'selected' : '' %>>Cardiopatía</option>
+                        <option value="Diabetes" <%= user.antecedentes_familiares === 'Diabetes' ? 'selected' : '' %>>Diabetes</option>
+                        <option value="Ninguno" <%= user.antecedentes_familiares === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.antecedentes_familiares && !['Cáncer', 'Cardiopatía', 'Diabetes', 'Ninguno'].includes(user.antecedentes_familiares) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="antecedentes_familiares_otros" name="antecedentes_familiares_otros" placeholder="Especifique otro antecedente familiar" value="<%= user.antecedentes_familiares && !['Cáncer', 'Cardiopatía', 'Diabetes', 'Ninguno'].includes(user.antecedentes_familiares) ? user.antecedentes_familiares : '' %>"
+                                            style="display:none;">
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label for="medicamentos_actuales" class="form-label">Medicamento Actual</label>
+                                        <select class="form-select form-select-sm" id="medicamentos_actuales" name="medicamentos_actuales" onchange="toggleOtros('medicamentos_actuales')">
+                        <option value="">Seleccione uno</option>
+                        <option value="Paracetamol" <%= user.medicamentos_actuales === 'Paracetamol' ? 'selected' : '' %>>Paracetamol</option>
+                        <option value="Insulina" <%= user.medicamentos_actuales === 'Insulina' ? 'selected' : '' %>>Insulina</option>
+                        <option value="Omeprazol" <%= user.medicamentos_actuales === 'Omeprazol' ? 'selected' : '' %>>Omeprazol</option>
+                        <option value="Ninguno" <%= user.medicamentos_actuales === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.medicamentos_actuales && !['Paracetamol', 'Insulina', 'Omeprazol', 'Ninguno'].includes(user.medicamentos_actuales) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="medicamentos_actuales_otros" name="medicamentos_actuales_otros" placeholder="Especifique otro medicamento" value="<%= user.medicamentos_actuales && !['Paracetamol', 'Insulina', 'Omeprazol', 'Ninguno'].includes(user.medicamentos_actuales) ? user.medicamentos_actuales : '' %>"
+                                            style="display:none;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="cirugias" class="form-label">Cirugía previa</label>
+                                        <select class="form-select form-select-sm" id="cirugias" name="cirugias" onchange="toggleOtros('cirugias')">
+                        <option value="">Seleccione una</option>
+                        <option value="Apendicectomía" <%= user.cirugias === 'Apendicectomía' ? 'selected' : '' %>>Apendicectomía</option>
+                        <option value="Cesárea" <%= user.cirugias === 'Cesárea' ? 'selected' : '' %>>Cesárea</option>
+                        <option value="Amigdalectomía" <%= user.cirugias === 'Amigdalectomía' ? 'selected' : '' %>>Amigdalectomía</option>
+                        <option value="Ninguno" <%= user.cirugias === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.cirugias && !['Apendicectomía', 'Cesárea', 'Amigdalectomía', 'Ninguno'].includes(user.cirugias) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="cirugias_otros" name="cirugias_otros" placeholder="Especifique otra cirugía" value="<%= user.cirugias && !['Apendicectomía', 'Cesárea', 'Amigdalectomía', 'Ninguno'].includes(user.cirugias) ? user.cirugias : '' %>"
+                                            style="display:none;">
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label for="enfermedades_cronicas" class="form-label">Enfermedad Crónica</label>
+                                        <select class="form-select form-select-sm" id="enfermedades_cronicas" name="enfermedades_cronicas" onchange="toggleOtros('enfermedades_cronicas')">
+                        <option value="">Seleccione una</option>
+                        <option value="Asma" <%= user.enfermedades_cronicas === 'Asma' ? 'selected' : '' %>>Asma</option>
+                        <option value="Epilepsia" <%= user.enfermedades_cronicas === 'Epilepsia' ? 'selected' : '' %>>Epilepsia</option>
+                        <option value="Artritis" <%= user.enfermedades_cronicas === 'Artritis' ? 'selected' : '' %>>Artritis</option>
+                        <option value="Ninguno" <%= user.enfermedades_cronicas === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.enfermedades_cronicas && !['Asma', 'Epilepsia', 'Artritis', 'Ninguno'].includes(user.enfermedades_cronicas) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="enfermedades_cronicas_otros" name="enfermedades_cronicas_otros" placeholder="Especifique otra enfermedad crónica" value="<%= user.enfermedades_cronicas && !['Asma', 'Epilepsia', 'Artritis', 'Ninguno'].includes(user.enfermedades_cronicas) ? user.enfermedades_cronicas : '' %>"
+                                            style="display:none;">
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="enfermedades_contagiosas_recientes" class="form-label">Enfermedad Contagiosa Reciente</label>
+                                        <select class="form-select form-select-sm" id="enfermedades_contagiosas_recientes" name="enfermedades_contagiosas_recientes" onchange="toggleOtros('enfermedades_contagiosas_recientes')">
+                        <option value="">Seleccione una</option>
+                        <option value="COVID-19" <%= user.enfermedades_contagiosas_recientes === 'COVID-19' ? 'selected' : '' %>>COVID-19</option>
+                        <option value="Gripe" <%= user.enfermedades_contagiosas_recientes === 'Gripe' ? 'selected' : '' %>>Gripe</option>
+                        <option value="Hepatitis A" <%= user.enfermedades_contagiosas_recientes === 'Hepatitis A' ? 'selected' : '' %>>Hepatitis A</option>
+                        <option value="Ninguno" <%= user.enfermedades_contagiosas_recientes === 'Ninguno' ? 'selected' : '' %>>Ninguno</option>
+                        <option value="Otros" <%= user.enfermedades_contagiosas_recientes && !['COVID-19', 'Gripe', 'Hepatitis A', 'Ninguno'].includes(user.enfermedades_contagiosas_recientes) ? 'selected' : '' %>>Otros</option>
+                    </select>
+                                        <input type="text" class="form-control form-control-sm mt-1" id="enfermedades_contagiosas_recientes_otros" name="enfermedades_contagiosas_recientes_otros" placeholder="Especifique otra enfermedad contagiosa" value="<%= user.enfermedades_contagiosas_recientes && !['COVID-19', 'Gripe', 'Hepatitis A', 'Ninguno'].includes(user.enfermedades_contagiosas_recientes) ? user.enfermedades_contagiosas_recientes : '' %>"
+                                            style="display:none;">
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="fuma" name="fuma" <%=user.fuma ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="fuma">¿Fuma?</label>
+                                </div>
+
+                                <div class="form-group mt-2" id="tipo_fuma_contenedor" style="display: none;">
+                                    <label for="tipo_fuma" class="form-label">¿Qué tipo?</label>
+                                    <select class="form-select form-select-sm" id="tipo_fuma" name="tipo_fuma">
+                    <option value="">Seleccione una opción</option>
+                    <option value="Cigarrillo" <%= user.tipo_fuma === 'Cigarrillo' ? 'selected' : '' %>>Cigarrillo</option>
+                    <option value="Marihuana" <%= user.tipo_fuma === 'Marihuana' ? 'selected' : '' %>>Marihuana</option>
+                    <option value="Vapeador" <%= user.tipo_fuma === 'Vapeador' ? 'selected' : '' %>>Vapeador</option>
+                    <option value="Otros" <%= user.tipo_fuma && !['Cigarrillo', 'Marihuana', 'Vapeador'].includes(user.tipo_fuma) ? 'selected' : '' %>>Otros</option>
+                </select>
+                                    <input type="text" id="tipo_fuma_otros" name="tipo_fuma_otros" class="form-control form-control-sm mt-1" placeholder="Especifique otro tipo" value="<%= user.tipo_fuma && !['Cigarrillo', 'Marihuana', 'Vapeador'].includes(user.tipo_fuma) ? user.tipo_fuma : '' %>"
+                                        style="display: none;">
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="alcohol" name="alcohol" <%=user.alcohol ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="alcohol">¿Consume alcohol?</label>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-sm">Guardar Cambios</button>
+                            </form>
+        </div>
+
+        <script>
+            function toggleOtros(campo) {
+                const select = document.getElementById(campo);
+                const inputOtros = document.getElementById(campo + '_otros');
+                if (select.value === 'Otros') {
+                    inputOtros.style.display = 'block';
+                    inputOtros.required = true;
+                } else {
+                    inputOtros.style.display = 'none';
+                    inputOtros.required = false;
+                    inputOtros.value = '';
+                }
+            }
+
+            window.addEventListener('load', () => {
+                // Mostrar campos "otros" si ya estaban seleccionados
+                [
+                    'alergias',
+                    'antecedentes_personales',
+                    'antecedentes_familiares',
+                    'medicamentos_actuales',
+                    'cirugias',
+                    'enfermedades_cronicas',
+                    'enfermedades_contagiosas_recientes'
+                ].forEach(campo => {
+                    toggleOtros(campo);
+                });
+
+                // Mostrar tipo de fumador si ya está marcado el checkbox
+                const fumaCheckbox = document.getElementById('fuma');
+                const tipoFumaContenedor = document.getElementById('tipo_fuma_contenedor');
+                const tipoFumaSelect = document.getElementById('tipo_fuma');
+                const tipoFumaOtros = document.getElementById('tipo_fuma_otros');
+
+                if (fumaCheckbox.checked) {
+                    tipoFumaContenedor.style.display = 'block';
+                }
+
+                if (tipoFumaSelect.value === 'Otros') {
+                    tipoFumaOtros.style.display = 'block';
+                }
+
+                fumaCheckbox.addEventListener('change', () => {
+                    tipoFumaContenedor.style.display = fumaCheckbox.checked ? 'block' : 'none';
+                    if (!fumaCheckbox.checked) {
+                        tipoFumaSelect.value = '';
+                        tipoFumaOtros.style.display = 'none';
+                        tipoFumaOtros.value = '';
+                    }
+                });
+
+                tipoFumaSelect.addEventListener('change', () => {
+                    if (tipoFumaSelect.value === 'Otros') {
+                        tipoFumaOtros.style.display = 'block';
+                        tipoFumaOtros.required = true;
+                    } else {
+                        tipoFumaOtros.style.display = 'none';
+                        tipoFumaOtros.required = false;
+                        tipoFumaOtros.value = '';
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            const tipoIdSelect = document.getElementById('tipo_id');
+            const cedulaInput = document.getElementById('cedula');
+            const labelCedula = document.getElementById('label_cedula');
+
+            function actualizarValidacion() {
+                if (tipoIdSelect.value === 'nacional') {
+                    cedulaInput.type = 'text';
+                    cedulaInput.pattern = '[0-9]{10}';
+                    cedulaInput.title = 'Debe ser un número de cédula nacional válido de 10 dígitos';
+                    cedulaInput.placeholder = 'Ingrese su cédula nacional (10 dígitos)';
+                    labelCedula.textContent = 'Cédula Nacional';
+
+                    // Limitar a números y máximo 10 caracteres
+                    cedulaInput.value = cedulaInput.value.replace(/[^0-9]/g, '').slice(0, 10);
+                } else if (tipoIdSelect.value === 'extranjero') {
+                    cedulaInput.type = 'text';
+                    cedulaInput.pattern = '[A-Za-z0-9]{5,20}';
+                    cedulaInput.title = 'Ingrese su número de pasaporte (5 a 20 caracteres alfanuméricos)';
+                    cedulaInput.placeholder = 'Ingrese su número de pasaporte';
+                    labelCedula.textContent = 'Pasaporte Extranjero';
+                } else {
+                    cedulaInput.pattern = '';
+                    cedulaInput.title = '';
+                    cedulaInput.placeholder = '';
+                    labelCedula.textContent = 'Identificación';
+                }
+            }
+
+            tipoIdSelect.addEventListener('change', actualizarValidacion);
+
+            window.addEventListener('load', () => {
+                actualizarValidacion();
+            });
+        </script>
+
+</body>
+
+</html>

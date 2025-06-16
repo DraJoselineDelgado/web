@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Citas para el
+        <%= fecha %>
+    </title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Header logo y texto centrados */
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .header img {
+            max-height: 70px;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+        
+        .header h2 {
+            margin: 0;
+            color: #004085;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .header h3 {
+            margin: 4px 0 0;
+            font-weight: 500;
+            color: #007bff;
+            font-style: italic;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #004085;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        th,
+        td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .btn-imprimir,
+        .btn-volver {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        .btn-volver {
+            background-color: #6c757d;
+        }
+        
+        @media print {
+            h1,
+            /* .header, */
+            /* Comentada para que no se oculte el header */
+            .btn-imprimir,
+            .btn-volver {
+                display: none;
+            }
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                width: 100%;
+                margin: 0;
+            }
+            table {
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header" role="banner" aria-label="Información del consultorio">
+            <img src="/images/logo.png" alt="Logo Consultorio" />
+            <h2>Dra. Joseline Delgado</h2>
+            <h3>Odontología Especializada</h3>
+        </div>
+
+        <h1>CITAS DEL DIA -
+            <%= fecha %>
+        </h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Cédula</th>
+                    <th>Hora</th>
+                    <th>Especialidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% citas.forEach(cita => { %>
+                    <tr>
+                        <td>
+                            <%= cita.nombre %>
+                        </td>
+                        <td>
+                            <%= cita.cedula %>
+                        </td>
+                        <td>
+                            <%= cita.hora %>
+                        </td>
+                        <td>
+                            <%= cita.especialidad %>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </tbody>
+        </table>
+
+        <button class="btn-imprimir" onclick="window.print()">🖨️ Imprimir Citas</button>
+        <a href="/admin-obtener-citas" class="btn-volver">Volver</a>
+    </div>
+</body>
+
+</html>

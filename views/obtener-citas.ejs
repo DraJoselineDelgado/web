@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Agendar Cita</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+
+    <style>
+        /* Calendario más moderno */
+        
+        #calendar {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 12px 30px rgb(0 0 0 / 0.1);
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Botones de evento */
+        
+        .fc-event.agendado {
+            background-color: #dc3545 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgb(220 53 69 / 0.5);
+            transition: transform 0.15s ease-in-out;
+        }
+        
+        .fc-event.agendado:hover {
+            transform: scale(1.05);
+        }
+        
+        .fc-event.libre {
+            background-color: #28a745 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgb(40 167 69 / 0.5);
+            transition: transform 0.15s ease-in-out;
+        }
+        
+        .fc-event.libre:hover {
+            transform: scale(1.05);
+        }
+        /* Estilo general para días y encabezados */
+        
+        .fc-toolbar {
+            margin-bottom: 25px;
+        }
+        
+        .fc-toolbar h2 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        /* Modal personalizado */
+        
+        .modal-content {
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgb(0 0 0 / 0.25);
+            padding: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Contenedor de botones de horas */
+        
+        #botones-citas-dia {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        /* Botones estilo tarjeta para horarios */
+        
+        #botones-citas-dia button {
+            min-width: 140px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 6px 15px rgb(0 0 0 / 0.1);
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        
+        #botones-citas-dia button.ocupado {
+            background: #dc3545;
+            box-shadow: 0 6px 20px rgb(220 53 69 / 0.6);
+        }
+        
+        #botones-citas-dia button.libre {
+            background: #28a745;
+            box-shadow: 0 6px 20px rgb(40 167 69 / 0.6);
+        }
+        /* Iconos en botones */
+        
+        #botones-citas-dia button .bi {
+            font-size: 1.3rem;
+        }
+        /* Título modal */
+        
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 10px;
+        }
+        /* Botón cerrar modal */
+        
+        .btn-close {
+            filter: drop-shadow(0 0 2px rgba(255 255 255 / 0.9));
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('HOMEheader') %>
+
+        <h1 class="text-center mt-5 mb-2">CALENDARIO MENSUAL</h1>
+        <h2 class="text-center mb-4 text-muted">Verificar citas agendadas de los pacientes</h2>
+
+        <div class="btn-agendar-cita-container text-center mb-4">
+            <a href="/agendar-cita" class="btn btn-primary btn-lg shadow">
+                <i class="bi bi-plus-circle"></i> Agendar Cita
+            </a>
+        </div>
+
+        <!-- Leyenda Semáforo -->
+        <div class="container my-4 text-center">
+            <div class="d-inline-flex align-items-center gap-4">
+                <div class="d-flex align-items-center gap-2">
+                    <span style="display:inline-block; width:20px; height:20px; background:#28a745; border-radius:5px;"></span>
+                    <span>Disponible</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span style="display:inline-block; width:20px; height:20px; background:#dc3545; border-radius:5px;"></span>
+                    <span>Agendado</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Texto guía para navegación -->
+        <div class="container mb-3 text-center">
+            <p class="text-muted fst-italic">
+                Use las flechas <i class="bi bi-arrow-left-circle-fill"></i> <i class="bi bi-arrow-right-circle-fill"></i> para navegar entre meses y ver todas sus citas agendadas.
+            </p>
+        </div>
+
+        <div id="calendar"></div>
+
+        <!-- Modal para mostrar citas del día -->
+        <div class="modal fade" id="modalCitas" tabindex="-1" aria-labelledby="modalCitasLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content shadow">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalCitasLabel">Citas del día</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="botones-citas-dia" aria-live="polite" aria-label="Lista de citas y horarios del día"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap & jQuery Bundle -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#calendar').fullCalendar({
+                    lang: 'es',
+                    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+                    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    buttonText: {
+                        today: 'Hoy'
+                    },
+                    events: {
+                        url: '/obtener-citas-json',
+                        type: 'GET',
+                        error: function() {
+                            alert('Error al obtener las citas');
+                        }
+                    },
+                    eventRender: function(event, element) {
+                        if (event.estado === 'ocupado') {
+                            element.addClass('agendado');
+                        } else {
+                            element.addClass('libre');
+                        }
+                    },
+                    dayClick: function(date, jsEvent, view) {
+                        const fecha = date.format('YYYY-MM-DD');
+                        $('#modalCitasLabel').text('Citas para el ' + fecha);
+
+                        const horasDelDia = [
+                            '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM',
+                            '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+                            '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM',
+                            '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
+                            '4:00 PM', '4:30 PM', '5:00 PM'
+                        ];
+
+                        $.get(`/citas-por-dia?fecha=${fecha}`, function(citas) {
+                            const container = $('#botones-citas-dia');
+                            container.empty();
+
+                            horasDelDia.forEach(hora => {
+                                const cita = citas.find(c => {
+                                    if (!c.hora) return false;
+                                    const horaCita12h = moment(c.hora, ['HH:mm:ss', 'HH:mm']).format('h:mm A');
+                                    return horaCita12h === hora;
+                                });
+
+                                if (cita) {
+                                    container.append(`<button type="button" class="btn ocupado" disabled aria-label="${hora} ocupado por ${cita.nombre}">
+            <i class="bi bi-calendar-x"></i> ${hora} - Ocupado 
+          </button>`);
+                                } else {
+                                    container.append(`<button type="button" class="btn libre" disabled aria-label="${hora} disponible">
+            <i class="bi bi-calendar-check"></i> ${hora} - Disponible
+          </button>`);
+                                }
+                            });
+
+                            var myModal = new bootstrap.Modal(document.getElementById('modalCitas'));
+                            myModal.show();
+                        });
+                    }
+
+                });
+            });
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consultorio Odontológico</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" />
+    <style>
+        body {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in-out forwards;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+        
+        .navbar-brand img {
+            max-height: 40px;
+        }
+        
+        .navbar-nav .nav-link {
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #007bff;
+        }
+        /* Hero Section Styling */
+        
+        .hero {
+            background-image: url('/images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: rgb(134, 132, 132);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            min-height: 600px;
+            padding: 80px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .hero-main-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: rgb(51, 50, 50);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .video-wrapper video {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .hero-subtitle {
+            font-size: 3rem;
+            font-weight: 700;
+            color: rgb(133, 132, 132);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin: 0;
+            padding: 0 1rem;
+            justify-content: center;
+            min-height: 270px;
+            text-align: center;
+        }
+        /* Responsive adjustments */
+        
+        @media (max-width: 991px) {
+            .hero-subtitle {
+                font-size: 2.4rem;
+                margin-top: 1rem;
+                min-height: auto;
+            }
+            .container.d-flex {
+                flex-direction: column !important;
+            }
+        }
+        /* "¿Por qué preferirnos?" Section */
+        
+        .why-choose-us {
+            background-color: #f8f9fa;
+            padding: 50px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .why-choose-us .card {
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+            border-radius: 1rem;
+            /* 16px */
+            background-color: #e9f0ff;
+            /* color suave azul claro */
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 2.5rem;
+        }
+        
+        .why-choose-us h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .why-choose-us p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        /* Service Cards Section Styling */
+        
+        .service-item {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .service-item .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-item .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .service-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin-bottom: 16px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .service-item h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .service-item p {
+            font-size: 1rem;
+            color: #555;
+        }
+        
+        .service-item a {
+            margin-top: 15px;
+            padding: 8px 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-radius: 50px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .service-item a:hover {
+            background-color: #0056b3;
+        }
+        /* Testimonials Section Styling */
+        
+        .testimonials {
+            background-color: #f8f9fa;
+            padding: 64px 0;
+        }
+        
+        .testimonials h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            color: #007bff;
+        }
+        
+        .testimonial-item {
+            text-align: center;
+        }
+        
+        .testimonial-item img {
+            border-radius: 50%;
+            max-width: 80px;
+            margin-bottom: 16px;
+        }
+        
+        .testimonial-item h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .testimonial-item p {
+            font-size: 1rem;
+            font-style: italic;
+            color: #555;
+            margin-top: 10px;
+        }
+        /* Footer Styling */
+        
+        footer {
+            background-color: #007bff;
+            color: #fff;
+            padding: 16px 0;
+            text-align: center;
+        }
+        
+        footer p {
+            margin-bottom: 0;
+        }
+        /* Floating Window Styling */
+        
+        .ventana-flotante {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ffffff;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            z-index: 9999;
+            max-width: 300px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .ventana-flotante .cerrar-btn {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #888;
+        }
+        
+        .ventana-flotante .cerrar-btn:hover {
+            color: #000;
+        }
+        
+        .btn-primary {
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 14px 48px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #4a90e2, #007bff);
+            border: none;
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+            transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.2s ease;
+            color: white;
+        }
+        
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background: linear-gradient(135deg, #0056b3, #004080);
+            box-shadow: 0 8px 24px rgba(0, 70, 180, 0.6);
+            transform: translateY(-3px);
+            outline: none;
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(0, 70, 180, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('HOMEheader') %>
+
+        <main>
+            <!-- Hero Section -->
+            <section class="hero py-5">
+                <div class="container text-center mb-4">
+                    <h1 class="hero-main-title">Bienvenido a Consultorio Odontológico, donde nos dedicamos a cuidar de tu salud dental.</h1>
+                </div>
+
+                <div class="container d-flex flex-column flex-lg-row align-items-center justify-content-center gap-4">
+                    <div class="video-wrapper flex-shrink-0" style="max-width: 480px; width: 100%;">
+                        <video src="/videos/videoo.mp4" controls autoplay loop muted class="img-fluid rounded-3 shadow-lg"></video>
+                    </div>
+                    <div class="subtitle-wrapper text-lg-start text-center" style="max-width: 480px; width: 100%;">
+                        <h2 class="hero-subtitle">Tu sonrisa, nuestra prioridad</h2>
+                    </div>
+                </div>
+
+                <div class="container text-center mt-4">
+                    <a href="/agendar-cita" class="btn btn-primary btn-lg px-4">Agendar Cita</a>
+                </div>
+            </section>
+
+            <!-- "¿Por qué preferirnos?" Section -->
+            <section class="why-choose-us">
+                <div class="container">
+                    <div class="card shadow-sm p-4 rounded-4 mx-auto" style="max-width: 900px; background-color: #e9f0ff;">
+                        <h2 class="text-center mb-4" style="font-size: 2.8rem; font-weight: 700; color: #007bff;">¿Por qué preferirnos como Consultorio?</h2>
+                        <p class="text-center fs-5 text-secondary" style="line-height: 1.6;">
+                            En nuestro consultorio odontológico, ofrecemos tratamientos de calidad utilizando tecnología avanzada, con un equipo de profesionales altamente capacitados. Nos preocupamos por tu salud bucal y tu bienestar, brindándote atención personalizada y el mejor
+                            servicio en todas nuestras especialidades.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="services py-4">
+                <div class="container">
+                    <h2 class="mb-4 text-center" style="font-size: 32px; font-weight: bold;">Nuestras Especialidades</h2>
+                    <div class="row">
+                        <div class="col-md-3 service-item">
+                            <div class="card h-100">
+                                <img src="/images/estetica.jpg" class="card-img-top" alt="Estética Dental">
+                                <div class="card-body">
+                                    <h3 class="card-title">Odontología General</h3>
+                                    <p class="card-text">Tratamientos avanzados para sonrisas perfectas.</p>
+                                    <a href="Esteticaa" class="btn btn-primary">Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 service-item">
+                            <div class="card h-100">
+                                <img src="/images/ortodoncia.jpg" class="card-img-top" alt="Ortodoncia">
+                                <div class="card-body">
+                                    <h3 class="card-title">Ortodoncia</h3>
+                                    <p class="card-text">Alineamos tus dientes y mejoramos tu sonrisa con tratamientos de ortodoncia personalizados.</p>
+                                    <a href="/Ortodonciaa" class="btn btn-primary">Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 service-item">
+                            <div class="card h-100">
+                                <img src="/images/cirugia.jpg" class="card-img-top" alt="Cirugía e Implantes">
+                                <div class="card-body">
+                                    <h3 class="card-title">Cirugía de Tercer Molares</h3>
+                                    <p class="card-text">Procedimientos quirúrgicos especializados en la extracción de terceros molares.</p>
+                                    <a href="/Cirugiaa" class="btn btn-primary">Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 service-item">
+                            <div class="card h-100">
+                                <img src="/images/otras.jpg" class="card-img-top" alt="Otras Especialidades">
+                                <div class="card-body">
+                                    <h3 class="card-title">Otras Especialidades</h3>
+                                    <p class="card-text">Ofrecemos una amplia gama de servicios odontológicos especializados.</p>
+                                    <a href="/OtrasEspee" class="btn btn-primary">Más Información</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Testimonials Section -->
+            <section class="testimonials">
+                <div class="container">
+                    <h2>Testimonios</h2>
+                    <div id="testimoniosCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <% if (testimonios && testimonios.length > 0) { %>
+                                <% for (let i = 0; i < testimonios.length; i += 3) { %>
+                                    <div class="carousel-item <% if (i === 0) { %> active <% } %>">
+                                        <div class="row">
+                                            <% for (let j = i; j < i + 3 && j < testimonios.length; j++) { %>
+                                                <div class="col-md-4 testimonial-item text-center">
+                                                    <% if (testimonios[j].foto_url) { %>
+                                                        <img src="/testimonio/<%= testimonios[j].foto_url %>" alt="<%= testimonios[j].nombre %>" class="rounded-circle mb-3" style="width:80px; height:80px; object-fit:cover;" />
+                                                        <% } else { %>
+                                                            <img src="/images/default-profile.png" alt="Foto por defecto" class="rounded-circle mb-3" style="width:80px; height:80px; object-fit:cover;" />
+                                                            <% } %>
+                                                                <p class="fst-italic">"
+                                                                    <%= testimonios[j].mensaje %>"</p>
+                                                                <h4>
+                                                                    <%= testimonios[j].nombre %>
+                                                                </h4>
+                                                </div>
+                                                <% } %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                        <% } else { %>
+                                            <p>No hay testimonios disponibles.</p>
+                                            <% } %>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#testimoniosCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#testimoniosCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </main>
+
+        <!-- Floating Window -->
+        <div class="ventana-flotante" id="ventanaFlotante">
+            <button class="cerrar-btn" onclick="cerrarVentana()">×</button>
+            <h5>¿Tienes alguna pregunta?</h5>
+            <p>Haz clic aquí para contactarnos por WhatsApp.</p>
+            <a href="https://wa.me/593993942467" target="_blank" class="btn btn-success btn-sm">Chatear</a>
+        </div>
+
+        <footer>
+            <div class="container">
+                <p>&copy; 2023 Consultorio Odontológico. Todos los derechos reservados.</p>
+            </div>
+        </footer>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+        <script>
+            window.addEventListener('load', () => {
+                document.body.style.opacity = '1';
+            });
+
+            function cerrarVentana() {
+                const ventana = document.getElementById('ventanaFlotante');
+                ventana.style.opacity = '0';
+                ventana.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    ventana.style.display = 'none';
+                }, 300);
+            }
+        </script>
+</body>
+
+</html>
